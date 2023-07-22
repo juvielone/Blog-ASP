@@ -11,7 +11,10 @@ namespace Bloggie.Web.Controllers
         private readonly ITagRepositories tagRepository;
         private readonly IBlogPostRepository blogPostRepository;
 
-        public AdminBlogPostController(ITagRepositories tagRepository, IBlogPostRepository blogPostRepository)
+        public AdminBlogPostController(
+            ITagRepositories tagRepository,
+            IBlogPostRepository blogPostRepository
+            )
         {
             this.tagRepository = tagRepository;
             this.blogPostRepository = blogPostRepository;
@@ -33,7 +36,7 @@ namespace Bloggie.Web.Controllers
         [HttpPost]
         public  async Task<IActionResult> Add(AddBlogPostRequest addBlogPostRequest)
         {
-            //Map
+            //Map view model to domain model
             var blogPost = new BlogPost
             {
                 Heading = addBlogPostRequest.Heading,
@@ -47,8 +50,8 @@ namespace Bloggie.Web.Controllers
                 Visible = addBlogPostRequest.Visible,
             };
 
-            //mAP 
-            var selectedTags= new List<Tag>();
+            //Map Tags from the selected tags 
+            var selectedTags = new List<Tag>();
             foreach (var selectedTagId in addBlogPostRequest.SelectedTags)
             {
                 var selectedTagGuid = Guid.Parse(selectedTagId);
@@ -61,13 +64,24 @@ namespace Bloggie.Web.Controllers
 
             }
 
+            //Mapping tags back into domain model
             blogPost.Tags = selectedTags;
-
 
             await blogPostRepository.AddAsync(blogPost);
 
             return RedirectToAction("Add");
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> List()
+        {
+            //Call the repo to get data
+            var blogPosts = await blogPostRepository.GetAllAsync();
+
+            return View(blogPosts);
+        }
+
 
 
     }
