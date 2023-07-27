@@ -82,6 +82,22 @@ namespace Bloggie.Web.Controllers
             return View(blogPosts);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> List(string sampType)
+        {
+            //Call the repo to get data
+            var blogPosts = await blogPostRepository.GetAllAsync();
+
+            if (sampType == "goku")
+            {
+                var gokuBlog = blogPosts.Where(x => x.Heading == "Goku").ToList();
+                //return View(gokuBlog);
+                return PartialView("_PartialList", gokuBlog);
+            }
+
+            return PartialView(blogPosts);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -188,6 +204,10 @@ namespace Bloggie.Web.Controllers
 
 
         }
+
+
+
+
 
     }
 

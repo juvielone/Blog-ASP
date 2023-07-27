@@ -9,12 +9,14 @@
     </div>
 </div>
 
-
+<button id="updateBtn" class="btn btn-primary" type="submit">
+    Update Data table
+</button>
 <div class="container py-5">
 
     @if(Model != null && Model.Any())
     {
-            <table class="table">
+            <table id="tableData" class="table">
                 <thead>
                     <tr>
                         <td>Id</td>
@@ -57,3 +59,18 @@
             <h1>No BlogPost Found!</h1>
         }
 </div>
+
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+<script>
+    $("#updateBtn").click(function () {
+
+        $.post('/AdminBlogPost/List', { sampType: "goku" }, function (data) {
+            $('#tableData').html(data);
+        });
+    });
+</script>
